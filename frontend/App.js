@@ -4,26 +4,63 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Homescreen from './screens/Homescreen';
 import Earlywarn from './screens/Earlywarn';
 import { Login, Signup, Welcome } from "./screens";
+import DonationHome from './screens/DonationHome';
+import DonationDetails from './screens/DonationDetails';
+import Donate from './screens/Donate'
+
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName='Welcome'
-        screenOptions={{
-          headerShown: false,
-          gestureEnabled: true,
-          animation: 'slide_from_right', // Custom slide animation
-        }}
-      >
-        <Stack.Screen name="Welcome" component={Welcome} />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Signup" component={Signup} />
-        <Stack.Screen name='Homescreen' component={Homescreen} />
-        <Stack.Screen name='Earlywarn' component={Earlywarn} />
-      </Stack.Navigator>
-    </NavigationContainer>
+   <NavigationContainer>
+     <Stack.Navigator
+     initialRouteName='Welcome'
+     screenOptions={{
+        
+        headerShown: false,
+        gestureEnabled: false,
+      
+      }}>
+
+
+<Stack.Screen
+          name="Welcome"
+          component={Welcome}
+          options={{
+            headerShown: false
+          }}
+        />
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{
+            headerShown: false
+          }}
+        />
+        <Stack.Screen
+          name="Signup"
+          component={Signup}
+          options={{
+            headerShown: false
+          }}
+        />
+        <Stack.Screen 
+          name='Homescreen' 
+          component={Homescreen}
+          options={{
+            headerShown: false
+          }}
+        />
+        <Stack.Screen name='Earlywarn' component={Earlywarn}/>
+        <Stack.Screen name='DonationHome' component={DonationHome}/>
+        <Stack.Screen name='DonationDetails' component={DonationDetails}/>
+        <Stack.Screen name='Donate' component={Donate}/>
+
+
+  
+
+        </Stack.Navigator>
+   </NavigationContainer>
   );
 }
