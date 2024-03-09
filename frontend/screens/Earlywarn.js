@@ -1,88 +1,69 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, ActivityIndicator } from 'react-native';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import MapView, { Marker } from 'react-native-maps';
 
+export default function Earlywarn() {
+  const [json_data, setjson] = useState(null);
 
-export default function Earlywarn()
-{
-    const [json_data, setjson] = useState();
-   
-    useEffect( () => {
-        
-getJson();
+  useEffect(() => {
+      getJson();
+  }, []);
 
-    }, []);
-
-
-    async function getJson()
-    {
-        try
-        {
-            const response = await fetch('https://sachet.ndma.gov.in/cap_public_website/FetchAllAlertDetails', {
-                method: 'POST',
-                headers: {
+  async function getJson() {
+      try {
+          const response = await fetch('https://sachet.ndma.gov.in/cap_public_website/FetchAllAlertDetails', {
+              method: 'POST',
+              headers: {
                   'Accept': 'application/json, text/plain, */*',
                   'Content-Length': '0'
-                }});
-            const data = await response.json();
-            console.log(data)
-            setjson(data);
-
-            //console.log(fetchCoordinates())
-            //console.log(parseFloat(fetchCoordinates()[0]))
-            
+              }
+          });
+          const data = await response.json();
+          setjson(data);
+          console.log(data);
+          console.log(fetchCoordinates());
+      } catch (error) {
+          console.error('Error fetching data:', error);
+      }
   }
-catch (error)
-{
-   
-    console.error('Error fetching data:', error);
-}
 
-    }
+  function fetchCoordinates() {
+      if (json_data && json_data.length > 0) {
+          const entry = json_data[0].centroid.split(",");
+          return {
+              latitude: parseFloat(entry[1]),
+              longitude: parseFloat(entry[0])
+          };
+      }
+      return null; // Return null if JSON data is not available
+  }
 
-    function fetchCoordinates()
-    {
-        const entry = (json_data[0].centroid).split(",")
-        console.log(entry)
-        return entry
-    }
-  
-
-    return( <View style= {styles.container}>
-        <View>
-        <MapView
-        style={{ height: 600}}
-        initialRegion={{
-           latitude: parseFloat(fetchCoordinates()),
-           longitude: parseFloat(fetchCoordinates()),
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-          latitude: 100,
-          longitude: 100,
-        }}
-      >
-        <Marker
-          coordinate={{ latitude: parseFloat(fetchCoordinates()[1]), longitude: parseFloat(fetchCoordinates()[0])}}
-          title="Marker Title"
-          description="Marker Description"
-          //coordinate={{ latitude: 100, longitude: 100}}
-        />
-    
-      </MapView>
-        </View>
-
-
-         <View style={styles.footer}>
-        
-         </View>
-        
-
-        </View>
-
-    );
+  return (
+      <View style={styles.container}>
+          {json_data ? (
+              <MapView
+                  style={{ flex: 1 }}
+                  initialRegion={{
+                      ...fetchCoordinates(),
+                      latitudeDelta: 0.0922,
+                      longitudeDelta: 0.0421
+                  }}
+              >
+                  <Marker
+                      coordinate={fetchCoordinates()}
+                      title="Marker Title"
+                      description="Marker Description"
+                  />
+              </MapView>
+          ) : (
+              <ActivityIndicator size="large" color="#0000ff" />
+          )}
+          <View style={styles.footer}></View>
+      </View>
+  );
 }
 
 
