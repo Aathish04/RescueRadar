@@ -1,15 +1,32 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, ActivityIndicator, Text, TouchableOpacity } from 'react-native';
+import { Platform, StyleSheet, View, ActivityIndicator, Text, TouchableOpacity, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import MapView, { Marker, Circle } from 'react-native-maps';
 import AlertInfo from '../Components/Alert';
 import { useNavigation } from '@react-navigation/native';
+import * as Location from 'expo-location';
 
 export default function Earlywarn() {
   const [json_data, setJson] = useState(null);
   const [disaster, setdisaster] = useState(null);
   const [selectedRegion, setSelectedRegion] = useState(null); // To store the selected region coordinates
   const navigation = useNavigation();
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
+  const pulseAnimation = React.useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+    })();
+  }, []);
 
   useEffect(() => {
     getJson();
@@ -26,7 +43,6 @@ export default function Earlywarn() {
       });
       const data = await response.json();
       setJson(data);
-      console.log(data);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -40,8 +56,31 @@ export default function Earlywarn() {
         longitude: parseFloat(entry[0])
       };
     }
-    // If JSON data is not available, return null
     return null;
+  }
+
+  // Function to calculate distance between two coordinates
+function calculateDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371; // Radius of the Earth in kilometers
+    const dLat = (lat2 - lat1) * (Math.PI / 180); // Convert degrees to radians
+    const dLon = (lon2 - lon1) * (Math.PI / 180); // Convert degrees to radians
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c; // Distance in kilometers
+    return distance;
+  }
+
+  function findCloseDisasters(currentLat, currentLon, disasters) {
+    const closeDisasters = [];
+    disasters.forEach((disaster) => {
+      const distance = calculateDistance(currentLat, currentLon, parseFloat(disaster.centroid.split(",")[1]), parseFloat(disaster.centroid.split(",")[0]));
+      if (distance <= 500) { // You can adjust the distance threshold as needed (e.g., 10 kilometers)
+        closeDisasters.push({ ...disaster, distance }); // Add disaster with distance to the list
+      }
+    });
+    return closeDisasters;
   }
 
   function renderMarkers() {
@@ -61,12 +100,44 @@ export default function Earlywarn() {
               latitude: parseFloat(entry.centroid.split(",")[1]),
               longitude: parseFloat(entry.centroid.split(",")[0])
             });
+
+            console.log(findCloseDisasters(parseFloat(location.coords.latitude), parseFloat(location.coords.longitude),json_data))
           }}
+          pinColor={entry.severity_color}
         />
       ));
     }
     return null;
   }
+
+  function startPulseAnimation() {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(pulseAnimation, {
+          toValue: 1.0,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+        Animated.timing(pulseAnimation, {
+          toValue: 0.0,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+        Animated.timing(pulseAnimation, {
+          toValue: 1.0,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+  }
+  
+
+  useEffect(() => {
+    if (location) {
+      startPulseAnimation();
+    }
+  }, [location]);
 
   return (
     <View style={styles.container}>
@@ -76,28 +147,50 @@ export default function Earlywarn() {
             style={{ flex: 1 }}
             initialRegion={{
               ...fetchCoordinates(),
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421
+              latitudeDelta: 30,
+              longitudeDelta: 30
             }}
           >
-            {selectedRegion && ( // Render the polygon if a region is selected
-               <Circle
-               center={{
-                 latitude: parseFloat(disaster.centroid.split(",")[1]),
-                 longitude: parseFloat(disaster.centroid.split(",")[0])
-               }}
-               radius={parseFloat(disaster.area_covered)} // Adjust the radius as needed
-               fillColor={disaster.severity_color} // Use the severity color as the fill color
-               strokeWidth={0} // Set the border width to 0 to hide it
-             />
+            {selectedRegion && (
+              <Circle
+                center={{
+                  latitude: parseFloat(disaster.centroid.split(",")[1]),
+                  longitude: parseFloat(disaster.centroid.split(",")[0])
+                }}
+                radius={parseFloat(disaster.area_covered)}
+                fillColor={disaster.severity_color}
+                strokeWidth={0}
+              />
             )}
             {renderMarkers()}
+            {location && (
+              <Marker
+                coordinate={{
+                  latitude: parseFloat(location.coords.latitude),
+                  longitude: parseFloat(location.coords.longitude)
+                }}
+              >
+                <Animated.View
+                  style={[
+                    styles.pulseIndicator,
+                    {
+                      transform: [
+                        {
+                          scale: pulseAnimation,
+                        },
+                      ],
+                    },
+                  ]}
+                />
+              </Marker>
+            )}
           </MapView>
           <TouchableOpacity
             style={styles.backButton}
             onPress={() => {
               navigation.goBack();
-            }}>
+            }}
+          >
             <Ionicons name="arrow-back-outline" size={32} color="white" />
           </TouchableOpacity>
           <View style={styles.warningIndicator} />
@@ -127,5 +220,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#112A46',
     borderRadius: 20,
     padding: 10,
+  },
+  pulseIndicator: {
+    width: 20,
+    height: 20,
+    borderRadius: 100,
+    backgroundColor: 'black', // Set the background color to transparent
+    borderColor: '#fff', // Set the border color to white
+    borderWidth: 5, // Set the border width
+    opacity: 0.9, // Adjust the opacity as needed
   },
 });

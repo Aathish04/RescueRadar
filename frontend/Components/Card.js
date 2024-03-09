@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, Image, TouchableWithoutFeedback, Animated } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-
 export default function Card({ imgsrc }) {
   const navigation = useNavigation();
   const [animatedValues, setAnimatedValues] = useState([
@@ -67,6 +66,7 @@ export default function Card({ imgsrc }) {
           </Animated.View>
         </TouchableWithoutFeedback>
       </View>
+    
     </View>
   );
 }

@@ -49,6 +49,7 @@ export default function App() {
         />
         <Stack.Screen name='Homescreen' component={Homescreen}/>
         <Stack.Screen name='Earlywarn' component={Earlywarn}/>
+    
 
 
   
