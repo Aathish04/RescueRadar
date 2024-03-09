@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
-import DonationCard from '../components/DonationCard';
+import DonationCard from '../Components/DonationCard';
 import donationData from '../data/donationData';
 import COLORS from '../constants/colors';
 import { LinearGradient } from "expo-linear-gradient";
-import SearchBar from '../components/SearchBar';
+import SearchBar from '../Components/SearchBar';
 
 // Mock data for category images, replace 'require' with actual paths or use { uri: 'remote-url' } for remote images
 const categoryImages = [

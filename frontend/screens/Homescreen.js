@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import Header from '../components/Header';
-import Card from '../components/Card';
+import Header from '../Components/Header';
+import Card from '../Components/Card';
 import { useNavigation } from '@react-navigation/native';
 
 
