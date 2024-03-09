@@ -7,6 +7,11 @@ import { Login, Signup, Welcome } from "./screens";
 import DonationHome from './screens/DonationHome';
 import DonationDetails from './screens/DonationDetails';
 import Donate from './screens/Donate'
+import PhoneCall from './screens/SOS';
+import CallEmergencyNumber from './screens/SOS';
+import QR from './screens/QR';
+import ShowQR from './screens/ShowQR';
+import ReadQR from './screens/ReadQR';
 
 
 const Stack = createNativeStackNavigator();
@@ -56,6 +61,9 @@ export default function App() {
         <Stack.Screen name='DonationHome' component={DonationHome}/>
         <Stack.Screen name='DonationDetails' component={DonationDetails}/>
         <Stack.Screen name='Donate' component={Donate}/>
+        <Stack.Screen name='SOS' component={CallEmergencyNumber}/>
+        <Stack.Screen name='ShowQR' component={ShowQR}/>
+        <Stack.Screen name='ReadQR' component={ReadQR}/>
 
 
   

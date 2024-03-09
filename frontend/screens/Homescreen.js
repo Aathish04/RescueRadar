@@ -12,7 +12,7 @@ export default function Homescreen() {
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Card
         imgSrc={require('../assets/sos.png')}
-        // onPress={() => navigation.navigate('DestinationScreenName')}
+        onPress={() => navigation.navigate('SOS')}
       />
       <Card
         imgSrc={require('../assets/warning-sign.png')}
@@ -24,6 +24,14 @@ export default function Homescreen() {
       <Card
         imgSrc={require('../assets/donation.png')}
         onPress={() => navigation.navigate('DonationHome')}
+        />
+        <Card
+        imgSrc={require('../assets/data.png')}
+        onPress={() => navigation.navigate('ShowQR')}
+        />
+        <Card
+        imgSrc={require('../assets/scanner.png')}
+        onPress={() => navigation.navigate('ReadQR')}
         />
     </View>
   );
