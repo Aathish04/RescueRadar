@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, ActivityIndicator } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import { StyleSheet, View, ActivityIndicator, Text, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import MapView, { Marker, Circle } from 'react-native-maps';
+import AlertInfo from '../Components/Alert';
+import { useNavigation } from '@react-navigation/native';
 
 export default function Earlywarn() {
   const [json_data, setJson] = useState(null);
+  const [disaster, setdisaster] = useState(null);
+  const [selectedRegion, setSelectedRegion] = useState(null); // To store the selected region coordinates
+  const navigation = useNavigation();
 
   useEffect(() => {
     getJson();
@@ -38,29 +44,70 @@ export default function Earlywarn() {
     return null;
   }
 
+  function renderMarkers() {
+    if (json_data) {
+      return json_data.map((entry, index) => (
+        <Marker
+          key={index}
+          coordinate={{
+            latitude: parseFloat(entry.centroid.split(",")[1]),
+            longitude: parseFloat(entry.centroid.split(",")[0])
+          }}
+          title={entry.severity}
+          description={entry.disaster_type}
+          onPress={() => {
+            setdisaster(entry);
+            setSelectedRegion({ // Set the selected region coordinates
+              latitude: parseFloat(entry.centroid.split(",")[1]),
+              longitude: parseFloat(entry.centroid.split(",")[0])
+            });
+          }}
+        />
+      ));
+    }
+    return null;
+  }
+
   return (
     <View style={styles.container}>
       {json_data ? (
-        <View style={{height: 600}}>
-        <MapView
-          style={{ flex: 1 }}
-          initialRegion={{
-            ...fetchCoordinates(),
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421
-          }}
-        >
-          <Marker
-            coordinate={fetchCoordinates()}
-            title="Marker Title"
-            description="Marker Description"
-          />
-        </MapView>
+        <View style={{ flex: 1 }}>
+          <MapView
+            style={{ flex: 1 }}
+            initialRegion={{
+              ...fetchCoordinates(),
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421
+            }}
+          >
+            {selectedRegion && ( // Render the polygon if a region is selected
+               <Circle
+               center={{
+                 latitude: parseFloat(disaster.centroid.split(",")[1]),
+                 longitude: parseFloat(disaster.centroid.split(",")[0])
+               }}
+               radius={parseFloat(disaster.area_covered)} // Adjust the radius as needed
+               fillColor={disaster.severity_color} // Use the severity color as the fill color
+               strokeWidth={0} // Set the border width to 0 to hide it
+             />
+            )}
+            {renderMarkers()}
+          </MapView>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => {
+              navigation.goBack();
+            }}>
+            <Ionicons name="arrow-back-outline" size={32} color="white" />
+          </TouchableOpacity>
+          <View style={styles.warningIndicator} />
         </View>
       ) : (
         <ActivityIndicator size="large" color="#0000ff" />
       )}
-      
+      <View style={styles.footer}>
+        {disaster ? <AlertInfo data={disaster} /> : <ActivityIndicator size="large" color="#0000ff" />}
+      </View>
     </View>
   );
 }
@@ -68,6 +115,17 @@ export default function Earlywarn() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'black'
-  }
+    backgroundColor: 'black',
+  },
+  footer: {
+    backgroundColor: 'white',
+  },
+  backButton: {
+    position: 'absolute',
+    top: 60,
+    left: 10,
+    backgroundColor: '#112A46',
+    borderRadius: 20,
+    padding: 10,
+  },
 });
