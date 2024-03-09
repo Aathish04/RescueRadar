@@ -1,19 +1,32 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
+import Homescreen from './screens/Homescreen';
+
+
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from "@react-navigation/native-stack"
+import { createNativeStackNavigator, TransitionPresets } from '@react-navigation/native-stack';
+import Earlywarn from './screens/Earlywarn';
 import { Login, Signup, Welcome } from "./screens";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  
+
+
+
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName='Welcome'
-      >
-        <Stack.Screen
+   <NavigationContainer>
+     <Stack.Navigator
+     initialRouteName='Welcome'
+     screenOptions={{
+        
+        headerShown: false,
+        gestureEnabled: false,
+      
+      }}>
+
+
+<Stack.Screen
           name="Welcome"
           component={Welcome}
           options={{
@@ -34,27 +47,17 @@ export default function App() {
             headerShown: false
           }}
         />
-      </Stack.Navigator>
-    </NavigationContainer>
+        <Stack.Screen name='Homescreen' component={Homescreen}/>
+        <Stack.Screen name='Earlywarn' component={Earlywarn}/>
+
+
+  
+
+        </Stack.Navigator>
+   </NavigationContainer>
   );
 }
 
-
-
-// export default function App() {
-//   return (
-//     <View style={styles.container}>
-//       <Text>Hello, Parthibum!!!!</Text>
-//       <StatusBar style="auto" />
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#fff',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-// });
+const styles = StyleSheet.create({
+ 
+});
