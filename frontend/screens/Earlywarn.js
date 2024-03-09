@@ -5,6 +5,7 @@ import MapView, { Marker, Circle } from 'react-native-maps';
 import AlertInfo from '../Components/Alert';
 import { useNavigation } from '@react-navigation/native';
 import * as Location from 'expo-location';
+import Slider from '@react-native-community/slider';
 
 export default function Earlywarn() {
   const [json_data, setJson] = useState(null);
@@ -13,6 +14,7 @@ export default function Earlywarn() {
   const navigation = useNavigation();
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
+  const [threshold, setThreshold] = useState(10); // Initial threshold value
   const pulseAnimation = React.useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
@@ -60,7 +62,7 @@ export default function Earlywarn() {
   }
 
   // Function to calculate distance between two coordinates
-function calculateDistance(lat1, lon1, lat2, lon2) {
+  function calculateDistance(lat1, lon1, lat2, lon2) {
     const R = 6371; // Radius of the Earth in kilometers
     const dLat = (lat2 - lat1) * (Math.PI / 180); // Convert degrees to radians
     const dLon = (lon2 - lon1) * (Math.PI / 180); // Convert degrees to radians
@@ -76,7 +78,7 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
     const closeDisasters = [];
     disasters.forEach((disaster) => {
       const distance = calculateDistance(currentLat, currentLon, parseFloat(disaster.centroid.split(",")[1]), parseFloat(disaster.centroid.split(",")[0]));
-      if (distance <= 500) { // You can adjust the distance threshold as needed (e.g., 10 kilometers)
+      if (distance <= threshold) { // Filter disasters within the threshold distance
         closeDisasters.push({ ...disaster, distance }); // Add disaster with distance to the list
       }
     });
@@ -131,7 +133,6 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
       ])
     ).start();
   }
-  
 
   useEffect(() => {
     if (location) {
@@ -162,6 +163,18 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
                 strokeWidth={0}
               />
             )}
+            {location && (
+  <Circle
+    center={{
+      latitude: parseFloat(location.coords.latitude),
+      longitude: parseFloat(location.coords.longitude)
+    }}
+    radius={threshold*1000}
+    fillColor="rgba(0, 0, 255, 0.3)" // Set the fillColor with an alpha value for translucency
+    strokeWidth={0}
+  />
+)}
+
             {renderMarkers()}
             {location && (
               <Marker
@@ -184,6 +197,7 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
                 />
               </Marker>
             )}
+
           </MapView>
           <TouchableOpacity
             style={styles.backButton}
@@ -199,8 +213,33 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
         <ActivityIndicator size="large" color="#0000ff" />
       )}
       <View style={styles.footer}>
-        {disaster ? <AlertInfo data={disaster} /> : <ActivityIndicator size="large" color="#0000ff" />}
+        {disaster ? <AlertInfo data={disaster} /> : <ActivityIndicator size="large" color="#ffffff" />}
       </View>
+      <View style={{backgroundColor: 'white'}}>
+      <Slider
+  style={{ width: '80%', alignSelf: 'center', backgroundColor: 'white' }}
+  minimumValue={1}
+  maximumValue={2000}
+  minimumTrackTintColor="#000000"
+  maximumTrackTintColor="#000000"
+  step={50}
+  value={threshold}
+  onValueChange={setThreshold}
+  onSlidingComplete={(value) => {
+    Animated.timing(pulseAnimation, {
+      toValue: 1.0,
+      duration: 500,
+      useNativeDriver: true,
+    }).start(() => {
+      setThreshold(value); // Update the threshold value after animation completes
+      startPulseAnimation(); // Restart the pulse animation
+    });
+  }}
+/>
+
+      <Text style={{ alignSelf: 'center'}}>Threshold: {threshold}</Text>
+      </View>
+
     </View>
   );
 }
