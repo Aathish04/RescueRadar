@@ -1,0 +1,20 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type":"module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@chainsafe/libp2p-gossipsub": "^13.0.0",
+    "@orbitdb/core": "^2.1.0",
+    "blockstore-level": "^1.1.8",
+    "helia": "^4.0.2",
+    "libp2p-kad-dht": "^0.28.6"
+  }
+}
