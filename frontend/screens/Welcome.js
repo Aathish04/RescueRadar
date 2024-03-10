@@ -84,6 +84,27 @@ const Welcome = ({ navigation }) => {
                         }}>Login</Text>
                     </Pressable>
                 </View>
+
+                <View style={{
+                    flexDirection: "row",
+                    marginTop: 12,
+                    justifyContent: "center"
+                }}>
+                    <Text style={{
+                        fontSize: 16,
+                        color: COLORS.white
+                    }}>Have an official account? </Text>
+                    <Pressable
+                        onPress={() => navigation.navigate("GovtLogin")}
+                    >
+                        <Text style={{
+                            fontSize: 16,
+                            color: COLORS.white,
+                            fontWeight: "bold",
+                            marginLeft: 4
+                        }}>Log in here</Text>
+                    </Pressable>
+                </View>
             </View>
         </LinearGradient>
     )

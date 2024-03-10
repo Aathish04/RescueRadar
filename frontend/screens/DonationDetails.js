@@ -1,9 +1,13 @@
 import React, {useState} from 'react';
-import { ScrollView, StyleSheet, View, Text, Image, Button, TouchableOpacity} from 'react-native';
+import { ScrollView, StyleSheet, View, Text, Image, TouchableOpacity} from 'react-native';
+import Button from '../components/Button';
+import { useNavigation } from '@react-navigation/native';
+
 
 const DonationDetails = ({ route }) => {
   const { donation } = route.params;
   const progress = (donation.amountRaised / donation.target) * 100;
+  const navigation = useNavigation();
 
   const [readMore, setReadMore] = useState(false); // State to toggle description
 
@@ -35,13 +39,19 @@ const DonationDetails = ({ route }) => {
         <Text style={styles.organization}>{donation.organization}</Text>
       </View>
 
-      <View style={styles.row}>
-        <View style={styles.progressBarContainer}>
-          <View style={[styles.progressBar, { width: `${progress}%` }]}/>
-          <Text style={styles.progressText}>{progress.toFixed(2)}% Raised</Text>
-        </View>
-        <Button title="Donate" onPress={() => {}} style={styles.donateButton} />
+      <Text style={{marginLeft: 20}}>{'\u20A8'}. {donation.amountRaised} / {'\u20A8'}. {donation.target}</Text>
+      <View style={styles.progressBarContainer}>
+        <View style={[styles.progressBar, { width: `${progress}%` }]}/>
+        <Text style={styles.progressText}>{progress.toFixed(2)}%   Raised</Text>
       </View>
+      <Button
+                    title="Donate"
+                    onPress={() => navigation.navigate('Donate', { donation })}
+                    style={{
+                        marginTop: 20,
+                        width: "100%"
+                    }}
+                />
     </ScrollView>
   );
 };
@@ -107,6 +117,8 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     overflow: 'hidden',
     justifyContent: 'center',
+    marginTop: 20,
+    marginBottom: 20
   },
   progressBar: {
     position: 'absolute',
@@ -117,10 +129,6 @@ const styles = StyleSheet.create({
   },
   progressText: {
     textAlign: 'center',
-  },
-  donateButton: {
-    flex: 1,
-    marginHorizontal: 10,
   },
   readMoreText: {
     color: '#0066cc',

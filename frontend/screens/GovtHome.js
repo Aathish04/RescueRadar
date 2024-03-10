@@ -6,24 +6,13 @@ import Card from '../components/Card';
 import { useNavigation } from '@react-navigation/native';
 
 
-export default function Homescreen() {
+export default function GovtHome() {
   const navigation = useNavigation();
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Card
-        imgSrc={require('../assets/sos.png')}
-        // onPress={() => navigation.navigate('DestinationScreenName')}
-      />
-      <Card
         imgSrc={require('../assets/warning-sign.png')}
         onPress={() => navigation.navigate('Earlywarn')}
-        />
-      <Card
-        imgSrc={require('../assets/barter.png')}
-        />
-      <Card
-        imgSrc={require('../assets/donation.png')}
-        onPress={() => navigation.navigate('DonationHome')}
         />
         <Card
         imgSrc={require('../assets/splash.png')}

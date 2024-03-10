@@ -7,6 +7,10 @@ import { Login, Signup, Welcome } from "./screens";
 import DonationHome from './screens/DonationHome';
 import DonationDetails from './screens/DonationDetails';
 import Donate from './screens/Donate'
+import CreateFundraiser from './screens/CreateFundraiser';
+import GovtLogin from './screens/GovtLogin'
+import RescueActivitiesTracking from './screens/RescueActivitiesTracking';
+import GovtHome from './screens/GovtHome'
 
 
 const Stack = createNativeStackNavigator();
@@ -56,7 +60,10 @@ export default function App() {
         <Stack.Screen name='DonationHome' component={DonationHome}/>
         <Stack.Screen name='DonationDetails' component={DonationDetails}/>
         <Stack.Screen name='Donate' component={Donate}/>
-
+        <Stack.Screen name="CreateFundraiser" component={CreateFundraiser} />
+        <Stack.Screen name='GovtLogin' component={GovtLogin}/>
+        <Stack.Screen name='RescueActivitiesTracking' component={RescueActivitiesTracking} />
+        <Stack.Screen name='GovtHome' component={GovtHome} />
 
   
 
