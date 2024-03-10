@@ -1,0 +1,92 @@
+[
+    {
+        "userid": "user001",
+        "teamname": "Himalayan Heroes",
+        "userstatus": "active",
+        "lat": 34.1526,
+        "lon": 77.5771,
+        "contact": "+91-9400000000",
+        "locality": "Leh, Ladakh"
+    },
+    {
+        "userid": "user002",
+        "teamname": "Monsoon Mavericks",
+        "userstatus": "inactive",
+        "lat": 23.2599,
+        "lon": 77.4126,
+        "contact": "+91-9400000001",
+        "locality": "Kolkata, West Bengal"
+    },
+    {
+        "userid": "user003",
+        "teamname": "Ganges Guardians",
+        "userstatus": "active",
+        "lat": 25.3176,
+        "lon": 82.9739,
+        "contact": "+91-9400000002",
+        "locality": "Jaipur, Rajasthan"
+    },
+    {
+        "userid": "user004",
+        "teamname": "Deccan Defenders",
+        "userstatus": "inactive",
+        "lat": 17.385,
+        "lon": 78.4867,
+        "contact": "+91-9400000003",
+        "locality": "Hyderabad, Telangana"
+    },
+    {
+        "userid": "user005",
+        "teamname": "Coastal Crusaders",
+        "userstatus": "active",
+        "lat": 13.0827,
+        "lon": 80.2707,
+        "contact": "+91-9400000004",
+        "locality": "Chennai, Tamil Nadu"
+    },
+    {
+        "userid": "user006",
+        "teamname": "Thar Saviors",
+        "userstatus": "inactive",
+        "lat": 26.9124,
+        "lon": 70.912,
+        "contact": "+91-9400000005",
+        "locality": "Jodhpur, Rajasthan"
+    },
+    {
+        "userid": "user007",
+        "teamname": "Vindhya Vanguard",
+        "userstatus": "active",
+        "lat": 22.9734,
+        "lon": 78.6569,
+        "contact": "+91-9400000006",
+        "locality": "Nagpur, Maharashtra"
+    },
+    {
+        "userid": "user008",
+        "teamname": "Kaveri Keepers",
+        "userstatus": "inactive",
+        "lat": 12.9716,
+        "lon": 77.5946,
+        "contact": "+91-9400000007",
+        "locality": "Bangalore, Karnataka"
+    },
+    {
+        "userid": "user009",
+        "teamname": "Western Ghats Watch",
+        "userstatus": "active",
+        "lat": 15.2993,
+        "lon": 74.124,
+        "contact": "+91-9400000008",
+        "locality": "Goa"
+    },
+    {
+        "userid": "user010",
+        "teamname": "Eastern Eagles",
+        "userstatus": "inactive",
+        "lat": 20.2961,
+        "lon": 85.8245,
+        "contact": "+91-9400000009",
+        "locality": "Bhubaneswar, Odisha"
+    }
+]
