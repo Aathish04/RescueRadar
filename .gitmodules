@@ -1,0 +1,6 @@
+[submodule "httpsms"]
+	path = httpsms
+	url = https://github.com/Aathish04/httpsms
+[submodule "opensms"]
+	path = opensms
+	url = https://github.com/Aathish04/opensms
