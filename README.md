@@ -4,6 +4,8 @@
 
 Rescue Radar aims to enhance user safety during natural disasters through a comprehensive mobile application. This application is designed to predict, alert, and support users by providing timely alerts, real-time updates, and facilitating active participation in relief efforts.
 
+Demo Video: [https://drive.google.com/file/d/1lBBd4I3StNJhmyMawb5N250GZ-YVELtE/view?usp=sharing](https://drive.google.com/file/d/1lBBd4I3StNJhmyMawb5N250GZ-YVELtE/view?usp=sharing)
+
 ## Features
 
 ### Early Warning System
@@ -50,12 +52,13 @@ Rescue Radar aims to enhance user safety during natural disasters through a comp
 
 ## Getting Started
 
-(Instructions on setting up the project locally, including installing dependencies, running the application, etc.)
+Ensure the encryption server is running.
+Move to the `frontend` directory, run `npm install` and then run `npm start`.
 
 ## Contribution Guidelines
 
-(Information for developers interested in contributing to the project, including coding standards, pull request guidelines, etc.)
+Developers are welcome to fork the project and take a pull request adding new features.
 
 ## License
 
-(Information about the project license, if applicable.)
+This project has been released under the MIT License.
