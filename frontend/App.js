@@ -12,6 +12,10 @@ import CallEmergencyNumber from './screens/SOS';
 import QR from './screens/QR';
 import ShowQR from './screens/ShowQR';
 import ReadQR from './screens/ReadQR';
+import CreateFundraiser from './screens/CreateFundraiser';
+import GovtLogin from './screens/GovtLogin'
+import RescueActivitiesTracking from './screens/RescueActivitiesTracking';
+import GovtHome from './screens/GovtHome'
 
 
 const Stack = createNativeStackNavigator();
@@ -64,10 +68,13 @@ export default function App() {
         <Stack.Screen name='SOS' component={CallEmergencyNumber}/>
         <Stack.Screen name='ShowQR' component={ShowQR}/>
         <Stack.Screen name='ReadQR' component={ReadQR}/>
-
+        <Stack.Screen name="CreateFundraiser" component={CreateFundraiser} />
+        <Stack.Screen name='GovtLogin' component={GovtLogin}/>
+        <Stack.Screen name='RescueActivitiesTracking' component={RescueActivitiesTracking} />
+        <Stack.Screen name='GovtHome' component={GovtHome} />
 
   
-
+ 
         </Stack.Navigator>
    </NavigationContainer>
   );

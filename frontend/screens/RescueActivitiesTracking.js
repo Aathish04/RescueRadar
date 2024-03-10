@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, ActivityIndicator, Text, TouchableOpacity, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import MapView, { Marker, Circle } from 'react-native-maps';
-import RescueInfo from '../components/Rescue'; // Ensure this component is correctly implemented
+import RescueInfo from '../Components/Rescue'; // Ensure this component is correctly implemented
 import { useNavigation } from '@react-navigation/native';
 import * as Location from 'expo-location';
 import Slider from '@react-native-community/slider';

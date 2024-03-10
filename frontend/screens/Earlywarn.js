@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Platform, StyleSheet, View, ActivityIndicator, Text, TouchableOpacity, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import MapView, { Marker, Circle } from 'react-native-maps';
-import AlertInfo from '../components/Alert';
+import AlertInfo from '../Components/Alert';
 import { useNavigation } from '@react-navigation/native';
 import * as Location from 'expo-location';
 import Slider from '@react-native-community/slider';
@@ -237,7 +237,7 @@ export default function Earlywarn() {
   }}
 />
 
-      <Text style={{ alignSelf: 'center'}}>Threshold: {threshold}</Text>
+      <Text style={{ alignSelf: 'center'}}>Threshold: {threshold} km</Text>
       </View>
 
     </View>
