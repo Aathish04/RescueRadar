@@ -1,146 +1,49 @@
-/**
- * A simple nodejs script which launches an orbitdb instance and creates a db
- * with a single record.
- *
- * To run from the terminal:
- *
- * ```bash
- * node index.js
- * ```
- * or
- * ```bash
- * node index.js /orbitdb/<hash>
- * ```
- */
-import { createHelia } from "helia";
-import { createOrbitDB, OrbitDBAccessController } from "@orbitdb/core";
-import { createLibp2p } from "libp2p";
-import { identify } from "@libp2p/identify";
-import { mdns } from "@libp2p/mdns";
-import { yamux } from "@chainsafe/libp2p-yamux";
-import { tcp } from "@libp2p/tcp";
-import { gossipsub } from "@chainsafe/libp2p-gossipsub";
-import { noise } from "@chainsafe/libp2p-noise";
-import { LevelBlockstore } from "blockstore-level";
-import fs from "fs";
-import readline from "readline";
+import GUN from 'gun';
+var gun = GUN(['http://localhost:8765/gun', 'https://gun-manhattan.herokuapp.com/gun']);
+// var users = gun.get('trinit-hackathon-ppp').get('reliefactivity-1');
+// users.on((data)=>{console.log(users)})
 
-const libp2pOptions = {
-    peerDiscovery: [mdns()],
-    addresses: {
-        listen: ["/ip4/0.0.0.0/tcp/0"],
-    },
-    transports: [tcp()],
-    connectionEncryption: [noise()],
-    streamMuxers: [yamux()],
-    services: {
-        identify: identify(),
-        pubsub: gossipsub({ emitSelf: true }),
-    },
-};
+// users.get('userid').once(v => console.log(v));
 
-const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-});
+// export function Search(tablename,property,value){
+//     var table = gun.get('trinit-hackathon-ppp').get('tablename').map();
 
-const id = process.argv.length > 2 ? 2 : 1;
+//     }
 
-const getNewId = (currentId) => {
-    let newId = currentId;
-    if (process.argv.length > 2) {
-        while (fs.existsSync(`./orbitdb/${newId}`)) {
-            newId += 1;
-        }
-    }
-    return newId;
-};
 
-const _newId = getNewId(id);
+// Search(reliefactivity)
 
-const blockstore = new LevelBlockstore(`./ipfs/${_newId}`);
+export function GetReliefActivity(){
 
-const libp2p = await createLibp2p(libp2pOptions);
-
-const ipfs = await createHelia({ libp2p, blockstore });
-
-const orbitdb = await createOrbitDB({
-    ipfs,
-    id: `nodejs-${_newId}`,
-    directory: `./orbitdb/${_newId}`,
-});
-
-let db;
-
-const askQuestion = (_newId) => {
-    // Ask the user to input messages
-    rl.question("Type a message to send: ", async (message) => {
-        await db.add({ from: _newId, message });
-
-        if (message === "exit") {
-            // Close the readline interface and end the process
-            rl.close();
-            await db.close();
-            await orbitdb.stop();
-            await ipfs.stop();
-            process.exit(0);
-        } else {
-            askQuestion(_newId);
-        }
-    });
-};
-
-if (process.argv.length > 2) {
-    const remoteDBAddress = process.argv.pop();
-    db = await orbitdb.open(remoteDBAddress);
-
-    // Listen for incoming messages
-    db.events.on("update", (event) => {
-        const latestMessage = event.payload.value;
-
-        process.stdout.write("\r");
-
-        if (latestMessage.from !== _newId) {
-            console.log(
-                `Received message from peer ${latestMessage.from}: ${latestMessage.message}\n`
-            );
-        }
-
-        askQuestion(_newId);
-    });
-
-    askQuestion(_newId);
-} else {
-    db = await orbitdb.open("chat-app", {
-        AccessController: OrbitDBAccessController({ write: ["*"] }),
-        replicate: true,
-    });
-
-    console.log(`Your database address: ${db.address.toString()}`);
-
-    // Listen for incoming messages
-    db.events.on("update", (event) => {
-        const latestMessage = event.payload.value;
-
-        process.stdout.write("\r");
-
-        if (latestMessage.from !== _newId) {
-            console.log(
-                `Received message from peer ${latestMessage.from}: ${latestMessage.message}\n`
-            );
-        }
-
-        askQuestion(_newId);
-    });
-
-    askQuestion(_newId);
+    // var reliefactivities = gun.get('trinit-hackathon-ppp').get('reliefactivity-1');
+    let activities = []
+    return new Promise((resolve,reject)=>{
+        gun.get('trinit-hackathon-ppp').get('reliefactivity-1').once().map().on((event,eventid)=>{if(event){activities.push({id:eventid,...event})}}).then(()=>{resolve(activities)}).catch((error)=>{reject(error)});
+    })
 }
 
-process.on("SIGINT", async () => {
-    console.log("exiting...");
+export async function GetUniqueReliefActivity(){
 
-    await db.close();
-    await orbitdb.stop();
-    await ipfs.stop();
-    process.exit(0);
-});
+var reliefobj=await GetReliefActivity()
+
+// console.log(reliefobj)
+
+var op = [];
+
+for(var i in reliefobj){
+    var obj = reliefobj[i]
+    var k = 0;
+    for (var j in op){
+        if (op[j].userid==obj.userid){
+            k=1
+        }
+    }
+    if(k==0){
+        op.push(obj)
+    }
+}
+// console.log(op);
+return op;
+}
+
+// console.log(await GetUniqueReliefActivity());
