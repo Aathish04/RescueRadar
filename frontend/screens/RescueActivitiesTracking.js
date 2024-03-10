@@ -9,7 +9,9 @@ import Slider from '@react-native-community/slider';
 
 import rescueOperations from '../data/RescueOperations.json';
 
+
 export default function RescueActivitiesTracking() {
+
   const [json_data] = useState(rescueOperations);
   const [disaster, setDisaster] = useState(null);
   const [location, setLocation] = useState(null);
@@ -27,6 +29,12 @@ export default function RescueActivitiesTracking() {
 
       let location = await Location.getCurrentPositionAsync({});
       setLocation(location);
+
+     
+      
+
+      
+
     })();
   }, []);
 

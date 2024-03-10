@@ -15,7 +15,7 @@ export default function GovtHome() {
         onPress={() => navigation.navigate('Earlywarn')}
         />
         <Card
-        imgSrc={require('../assets/splash.png')}
+        imgSrc={require('../assets/ambulance.png')}
         onPress={() => navigation.navigate('RescueActivitiesTracking')}
         />
     </View>
