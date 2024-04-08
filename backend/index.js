@@ -22,6 +22,35 @@ export function GetReliefActivity(){
     })
 }
 
+export function GetDonationActivity() {
+    let activities = [];
+
+    return new Promise((resolve, reject) => {
+        gun.get('trinit-hackathon-ppp').get('donationactivity-1').once().map().on((event, eventid) => {
+            if (event) {
+                // Convert categories set back to array
+                const categoriesArray = Object.keys(event.categories || {});
+                
+                activities.push({
+                    id: eventid,
+                    title: event.title,
+                    organization: event.organization,
+                    daysLeft: event.daysLeft,
+                    amountRaised: event.amountRaised,
+                    target: event.target,
+                    description: event.description,
+                    categories: categoriesArray
+                });
+            }
+        }).then(() => {
+            resolve(activities);
+        }).catch((error) => {
+            reject(error);
+        });
+    });
+}
+
+
 export async function GetUniqueReliefActivity(){
 
 var reliefobj=await GetReliefActivity()
@@ -46,5 +75,33 @@ for(var i in reliefobj){
 return op;
 }
 
-// console.log(await GetUniqueReliefActivity());
 
+export async function GetUniqueDonationActivity() {
+    var donationObj = await GetDonationActivity();
+
+    var uniqueDonations = [];
+
+    for (var i in donationObj) {
+        var donation = donationObj[i];
+        var isUnique = true;
+
+        // Check if the donation's ID is already in the uniqueDonations array
+        for (var j in uniqueDonations) {
+            if (uniqueDonations[j].id === donation.id) {
+                isUnique = false;
+                break;
+            }
+        }
+
+        // If the donation is unique, add it to the uniqueDonations array
+        if (isUnique) {
+            uniqueDonations.push(donation);
+        }
+    }
+
+    return uniqueDonations;
+}
+
+
+console.log(await GetUniqueReliefActivity());
+console.log(await GetUniqueDonationActivity());
